@@ -1,0 +1,7 @@
+[2021-06-15 09:28:27,074] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-15 09:28:33,918] [basehttp.py:157] [basehttp:log_message] [INFO]- "POST /upd_implement_status_task HTTP/1.1" 200 134
+[2021-06-15 09:28:37,137] [apscheduler_task.py:182] [apscheduler_task:test] [INFO]- -------------Tue Jun 15 09:28:37 2021,{'task_id': 'FLMG20210611172313552836', 'task_type': 1, 'task_imp_operation': 1, 'task_imp_interval': 1, 'task_imp_time': '3'}
+[2021-06-15 09:28:40,146] [apscheduler_task.py:182] [apscheduler_task:test] [INFO]- -------------Tue Jun 15 09:28:40 2021,{'task_id': 'FLMG20210611172313552836', 'task_type': 1, 'task_imp_operation': 1, 'task_imp_interval': 1, 'task_imp_time': '3'}
+[2021-06-15 09:36:59,476] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-15 09:37:06,494] [basehttp.py:157] [basehttp:log_message] [INFO]- "POST /upd_implement_status_task HTTP/1.1" 200 134
+[2021-06-15 09:37:09,756] [apscheduler_task.py:182] [apscheduler_task:test] [INFO]- -------------Tue Jun 15 09:37:09 2021,{'task_id': 'FLMG20210611172313552836', 'task_type': 1, 'task_imp_operation': 1, 'task_imp_interval': 1, 'task_imp_time': '3'}

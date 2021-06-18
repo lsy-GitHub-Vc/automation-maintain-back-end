@@ -1,0 +1,162 @@
+[2021-06-18 10:31:19,951] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:31:28,489] [views.py:66] [views:Bulk_Create_HostInfo] [INFO]- <---调用批量插入主机信息接口--->
+[2021-06-18 10:31:28,564] [views.py:68] [views:Bulk_Create_HostInfo] [INFO]- <---接收的参数:{'filepath': 'C:/Users/97576/Desktop/host.xlsx'}--->
+[2021-06-18 10:31:28,564] [views.py:114] [views:Execl] [INFO]- <---调用读取execl文件接口>
+[2021-06-18 10:31:28,564] [views.py:118] [views:Execl] [INFO]- <---打开文件--->
+[2021-06-18 10:31:29,001] [views.py:123] [views:Execl] [INFO]- <---获取所有页列表:['Sheet1']--->
+[2021-06-18 10:31:29,001] [views.py:130] [views:Execl] [INFO]- <---页名:Sheet1 数据行数:5--->
+[2021-06-18 10:31:29,376] [log.py:222] [log:log_response] [ERROR]- Internal Server Error: /hostgroup/bulk_create_hostinfo
+Traceback (most recent call last):
+  File "E:\PyCharm\automatization\automatization\hostgroup\views.py", line 90, in Bulk_Create_HostInfo
+    bulk_create_user_value = UserManage(name=sheet_value_list[4],username=sheet_value_list[5],password=sheet_host_list[6],become_method=sheet_value_list[7],
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\PyCharm\automatization\automatization\hostgroup\views.py", line 108, in Bulk_Create_HostInfo
+    logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
+IndexError: Replacement index 1 out of range for positional args tuple
+[2021-06-18 10:31:29,440] [basehttp.py:157] [basehttp:log_message] [ERROR]- "POST /hostgroup/bulk_create_hostinfo HTTP/1.1" 500 145
+[2021-06-18 10:33:43,174] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:33:45,636] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:34:00,464] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:34:03,038] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:34:24,892] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:34:27,332] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:34:36,693] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:34:39,332] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:35:22,474] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:35:25,092] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:40:55,705] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:40:58,600] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:41:40,544] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:41:43,236] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:42:18,902] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:42:21,268] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:43:50,095] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:43:52,766] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:43:58,315] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:44:00,829] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:44:18,537] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:44:21,369] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:45:27,145] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:45:29,554] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:47:49,277] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:47:51,934] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:48:17,566] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:48:20,068] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:48:35,652] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:48:38,545] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:48:46,163] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:48:48,674] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:49:03,671] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:49:06,156] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:49:37,758] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:49:40,203] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:49:48,541] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:49:51,304] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:50:01,242] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:50:03,767] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:50:21,359] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:50:24,083] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:50:36,142] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:50:38,930] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:50:43,882] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:50:46,329] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:50:58,757] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:51:01,157] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:51:09,454] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:51:12,051] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:51:20,404] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:51:23,085] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:51:41,614] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:51:44,232] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:51:52,308] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:51:54,845] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:52:06,066] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:52:08,677] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:52:19,424] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:52:22,081] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:52:25,767] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:52:28,499] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:55:01,960] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:55:04,808] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:57:30,585] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 10:57:33,009] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 10:57:48,267] [views.py:67] [views:Bulk_Create_HostInfo] [INFO]- <---调用批量插入主机信息接口--->
+[2021-06-18 10:57:48,267] [views.py:69] [views:Bulk_Create_HostInfo] [INFO]- <---接收的参数:{'filepath': 'C:/Users/97576/Desktop/host.xlsx'}--->
+[2021-06-18 10:57:48,267] [views.py:115] [views:Execl] [INFO]- <---调用读取execl文件接口>
+[2021-06-18 10:57:48,268] [views.py:119] [views:Execl] [INFO]- <---打开文件--->
+[2021-06-18 10:57:48,282] [views.py:124] [views:Execl] [INFO]- <---获取所有页列表:['Sheet1']--->
+[2021-06-18 10:57:48,282] [views.py:133] [views:Execl] [INFO]- <---页名:Sheet1 数据行数:4--->
+[2021-06-18 10:57:48,321] [log.py:222] [log:log_response] [ERROR]- Internal Server Error: /hostgroup/bulk_create_hostinfo
+Traceback (most recent call last):
+  File "E:\PyCharm\automatization\automatization\hostgroup\views.py", line 91, in Bulk_Create_HostInfo
+    bulk_create_user_value = UserManage(name=sheet_value_list[4],username=sheet_value_list[5],password=sheet_host_list[6],become_method=sheet_value_list[7],
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\python3.8.3\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\PyCharm\automatization\automatization\hostgroup\views.py", line 109, in Bulk_Create_HostInfo
+    logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
+IndexError: Replacement index 1 out of range for positional args tuple
+[2021-06-18 10:57:48,323] [basehttp.py:157] [basehttp:log_message] [ERROR]- "POST /hostgroup/bulk_create_hostinfo HTTP/1.1" 500 145
+[2021-06-18 11:00:30,491] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:00:33,163] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:00:39,601] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:00:44,455] [views.py:67] [views:Bulk_Create_HostInfo] [INFO]- <---调用批量插入主机信息接口--->
+[2021-06-18 11:00:44,456] [views.py:69] [views:Bulk_Create_HostInfo] [INFO]- <---接收的参数:{'filepath': 'C:/Users/97576/Desktop/host.xlsx'}--->
+[2021-06-18 11:00:44,456] [views.py:115] [views:Execl] [INFO]- <---调用读取execl文件接口>
+[2021-06-18 11:00:44,456] [views.py:119] [views:Execl] [INFO]- <---打开文件--->
+[2021-06-18 11:00:44,470] [views.py:124] [views:Execl] [INFO]- <---获取所有页列表:['Sheet1']--->
+[2021-06-18 11:00:44,471] [views.py:133] [views:Execl] [INFO]- <---页名:Sheet1 数据行数:4--->
+[2021-06-18 11:00:44,471] [views.py:97] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机管理表 笔数:4--->
+[2021-06-18 11:00:44,580] [views.py:100] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机用户管理表 笔数:4--->
+[2021-06-18 11:00:44,863] [views.py:103] [views:Bulk_Create_HostInfo] [INFO]- <---接入主机连通性测试接口 (异步)--->
+[2021-06-18 11:00:44,864] [views.py:165] [views:Clint_Host_Test] [INFO]- <---目标主机连通性测试--->
+[2021-06-18 11:00:44,865] [basehttp.py:157] [basehttp:log_message] [INFO]- "POST /hostgroup/bulk_create_hostinfo HTTP/1.1" 200 89
+[2021-06-18 11:00:44,888] [views.py:181] [views:Clint_Host_Test] [INFO]- <---连接失败的数据:[{'hostip': '127.0.0.1', 'port': 8000.0, 'credential': 4.0}, {'hostip': '127.0.0.1', 'port': 8000.0, 'credential': 4.0}, {'hostip': '127.0.0.1', 'port': 8000.0, 'credential': 4.0}, {'hostip': '127.0.0.1', 'port': 8000.0, 'credential': 4.0}]--->
+[2021-06-18 11:00:44,890] [views.py:185] [views:Clint_Host_Test] [INFO]- <---需要ssh连通性测试的数据:[]--->
+[2021-06-18 11:23:30,662] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:23:36,213] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:26:40,493] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:26:43,035] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:33:25,522] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:33:28,067] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:33:48,878] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:33:51,334] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:34:07,863] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:34:10,386] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:34:12,934] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:34:15,566] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:34:59,671] [views.py:67] [views:Bulk_Create_HostInfo] [INFO]- <---调用批量插入主机信息接口--->
+[2021-06-18 11:34:59,671] [views.py:69] [views:Bulk_Create_HostInfo] [INFO]- <---接收的参数:{'filepath': 'C:/Users/97576/Desktop/host.xlsx'}--->
+[2021-06-18 11:34:59,671] [views.py:115] [views:Execl] [INFO]- <---调用读取execl文件接口>
+[2021-06-18 11:34:59,672] [views.py:119] [views:Execl] [INFO]- <---打开文件--->
+[2021-06-18 11:34:59,738] [views.py:124] [views:Execl] [INFO]- <---获取所有页列表:['Sheet1']--->
+[2021-06-18 11:34:59,740] [views.py:133] [views:Execl] [INFO]- <---页名:Sheet1 数据行数:4--->
+[2021-06-18 11:34:59,740] [views.py:97] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机管理表 笔数:4--->
+[2021-06-18 11:34:59,824] [views.py:100] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机用户管理表 笔数:4--->
+[2021-06-18 11:34:59,874] [views.py:103] [views:Bulk_Create_HostInfo] [INFO]- <---接入主机连通性测试接口 (异步)--->
+[2021-06-18 11:34:59,875] [views.py:164] [views:Clint_Host_Test] [INFO]- <---目标主机连通性测试--->
+[2021-06-18 11:34:59,876] [basehttp.py:157] [basehttp:log_message] [INFO]- "POST /hostgroup/bulk_create_hostinfo HTTP/1.1" 200 89
+[2021-06-18 11:34:59,898] [views.py:180] [views:Clint_Host_Test] [INFO]- <---连接失败的数据:[{'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}]--->
+[2021-06-18 11:34:59,900] [views.py:184] [views:Clint_Host_Test] [INFO]- <---需要ssh连通性测试的数据:[]--->
+[2021-06-18 11:35:56,208] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:35:58,686] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:36:28,082] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 11:36:30,627] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader

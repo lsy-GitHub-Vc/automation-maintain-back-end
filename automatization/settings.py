@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o+85tk=%j4=(f54n55^eao7i-d2d%#3-b#c0=1m1g@#&)p6m#5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'automatization',
+    'automatization.data_migration',
+    'automatization.hostgroup',
 ]
 
 MIDDLEWARE = [
@@ -112,13 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -159,15 +161,15 @@ LOGGING = {
             'encoding': 'utf-8',  # 设置默认编码，否则打印出来汉字乱码
         },
         # 输出错误日志
-        'error': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(log_path, 'error-{}.log'.format(time.strftime('%Y-%m-%d'))),
-            'maxBytes': 1024 * 1024 * 5,  # 文件大小
-            'backupCount': 5,  # 备份数
-            'formatter': 'standard',  # 输出格式
-            'encoding': 'utf-8',  # 设置默认编码
-        },
+        # 'error': {
+        #     'level': 'ERROR',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(log_path, 'error-{}.log'.format(time.strftime('%Y-%m-%d'))),
+        #     'maxBytes': 1024 * 1024 * 5,  # 文件大小
+        #     'backupCount': 5,  # 备份数
+        #     'formatter': 'standard',  # 输出格式
+        #     'encoding': 'utf-8',  # 设置默认编码
+        # },
         # 控制台输出
         'console': {
             'level': 'DEBUG',
@@ -175,15 +177,15 @@ LOGGING = {
             'formatter': 'standard'
         },
         # 输出info日志
-        'info': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(log_path, 'info-{}.log'.format(time.strftime('%Y-%m-%d'))),
-            'maxBytes': 1024 * 1024 * 5,
-            'backupCount': 5,
-            'formatter': 'standard',
-            'encoding': 'utf-8',  # 设置默认编码
-        },
+        # 'info': {
+        #     'level': 'INFO',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(log_path, 'info-{}.log'.format(time.strftime('%Y-%m-%d'))),
+        #     'maxBytes': 1024 * 1024 * 5,
+        #     'backupCount': 5,
+        #     'formatter': 'standard',
+        #     'encoding': 'utf-8',  # 设置默认编码
+        # },
     },
     # 配置用哪几种 handlers 来处理日志
     'loggers': {
@@ -194,8 +196,13 @@ LOGGING = {
             'propagate': False
         },
         # log 调用时需要当作参数传入
+        # 'log': {
+        #     'handlers': ['error', 'info', 'console', 'default'],
+        #     'level': 'INFO',
+        #     'propagate': True
+        # },
         'log': {
-            'handlers': ['error', 'info', 'console', 'default'],
+            'handlers': ['console', 'default'],
             'level': 'INFO',
             'propagate': True
         },
