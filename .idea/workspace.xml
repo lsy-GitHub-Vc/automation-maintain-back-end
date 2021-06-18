@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1d761fac-c6d9-4910-87db-d9d48836cb6d" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/data_migration/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/data_migration/apscheduler_task.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/data_migration/databases_operation.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/data_migration/models.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/data_migration/urls.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/hostgroup/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/hostgroup/models.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/automatization/hostgroup/urls.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/error-2021-06-02.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/error-2021-06-03.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/global-2021-06-02.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/global-2021-06-03.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/info-2021-06-02.log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/logs/info-2021-06-03.log" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/automatization/__init__.py" afterPath="$PROJECT_DIR$/automatization/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/automatization/hostgroup/views.py" afterPath="$PROJECT_DIR$/automatization/hostgroup/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/automatization/models.py" afterPath="$PROJECT_DIR$/automatization/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/automatization/settings.py" afterPath="$PROJECT_DIR$/automatization/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/automatization/urls.py" afterPath="$PROJECT_DIR$/automatization/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logs/global-2021-06-18.log" afterPath="$PROJECT_DIR$/logs/global-2021-06-18.log" />
     </list>
     <ignored path="automatization.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -73,24 +54,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/automatization/hostgroup/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7568988">
-              <caret line="96" column="80" selection-start-line="96" selection-start-column="80" selection-end-line="96" selection-end-column="80" />
-              <folding>
-                <element signature="e#100#145#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/automatization/hostgroup/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="27" column="27" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="27" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/automatization/hostgroup/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.39018404">
+              <caret line="293" column="21" selection-start-line="293" selection-start-column="21" selection-end-line="293" selection-end-column="21" />
+              <folding>
+                <element signature="e#100#145#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -117,6 +98,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="lsy-GitHub-Vc &lt;65213218+lsy-GitHub-Vc@users.noreply.github.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -282,6 +268,22 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../project" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="219" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="219" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="248" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="1144" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="222" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="211" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="250" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1147" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -603,21 +605,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="0" width="1936" height="1038" extended-state="1" />
-    <editor active="true" />
+    <frame x="-8" y="0" width="1936" height="1038" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17631297" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13022508" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32945284" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32821724" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="版本控制" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34297964" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="调试" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23612751" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23612751" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3577332" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.063754424" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3577332" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.063754424" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="找到" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="找到" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293979" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1060,6 +1062,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/automatization/hostgroup/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="27" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/automatization/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1070,18 +1080,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/automatization/hostgroup/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="27" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/automatization/hostgroup/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7568988">
-          <caret line="96" column="80" selection-start-line="96" selection-start-column="80" selection-end-line="96" selection-end-column="80" />
+        <state vertical-scroll-proportion="0.39018404">
+          <caret line="293" column="21" selection-start-line="293" selection-start-column="21" selection-end-line="293" selection-end-column="21" />
           <folding>
             <element signature="e#100#145#0" expanded="true" />
           </folding>

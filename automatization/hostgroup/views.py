@@ -287,8 +287,8 @@ def Del_HostInfo(request):
             del_influence_num = HostInfoManage.objects.filter(id__in=id_list)
             if del_influence_num.exists():
                 del_influence_num.delete()
-                logger.info('<---id数据删除完成--->')
-                data = {'code':1,'msg':'id数据删除完成'.format(id),'data':'success'}
+                logger.info('<---id下主机数据删除完成--->')
+                data = {'code':1,'msg':'id下主机数据删除完成','data':'success'}
                 return HttpResponse(json.dumps(data),content_type='application/json')
             else:
                 data = {'code':2,'msg':'列表为空 无id参数','data':'Failure'}

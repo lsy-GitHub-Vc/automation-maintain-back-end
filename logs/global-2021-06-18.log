@@ -160,3 +160,18 @@ IndexError: Replacement index 1 out of range for positional args tuple
 [2021-06-18 11:35:58,686] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
 [2021-06-18 11:36:28,082] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
 [2021-06-18 11:36:30,627] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
+[2021-06-18 11:37:27,078] [views.py:67] [views:Bulk_Create_HostInfo] [INFO]- <---调用批量插入主机信息接口--->
+[2021-06-18 11:37:27,078] [views.py:69] [views:Bulk_Create_HostInfo] [INFO]- <---接收的参数:{'filepath': 'C:/Users/97576/Desktop/host.xlsx'}--->
+[2021-06-18 11:37:27,078] [views.py:115] [views:Execl] [INFO]- <---调用读取execl文件接口>
+[2021-06-18 11:37:27,079] [views.py:119] [views:Execl] [INFO]- <---打开文件--->
+[2021-06-18 11:37:27,092] [views.py:124] [views:Execl] [INFO]- <---获取所有页列表:['Sheet1']--->
+[2021-06-18 11:37:27,092] [views.py:133] [views:Execl] [INFO]- <---页名:Sheet1 数据行数:4--->
+[2021-06-18 11:37:27,093] [views.py:97] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机管理表 笔数:4--->
+[2021-06-18 11:37:27,134] [views.py:100] [views:Bulk_Create_HostInfo] [INFO]- <---插入主机用户管理表 笔数:4--->
+[2021-06-18 11:37:27,168] [views.py:103] [views:Bulk_Create_HostInfo] [INFO]- <---接入主机连通性测试接口 (异步)--->
+[2021-06-18 11:37:27,169] [views.py:164] [views:Clint_Host_Test] [INFO]- <---目标主机连通性测试--->
+[2021-06-18 11:37:27,170] [basehttp.py:157] [basehttp:log_message] [INFO]- "POST /hostgroup/bulk_create_hostinfo HTTP/1.1" 200 89
+[2021-06-18 11:37:27,191] [views.py:180] [views:Clint_Host_Test] [INFO]- <---连接失败的数据:[{'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}, {'hostip': '127.0.0.1', 'port': 8000, 'credential': 4}]--->
+[2021-06-18 11:37:27,193] [views.py:184] [views:Clint_Host_Test] [INFO]- <---需要ssh连通性测试的数据:[]--->
+[2021-06-18 14:52:32,268] [autoreload.py:222] [autoreload:trigger_reload] [INFO]- E:\PyCharm\automatization\automatization\hostgroup\views.py changed, reloading.
+[2021-06-18 14:52:38,212] [autoreload.py:598] [autoreload:run_with_reloader] [INFO]- Watching for file changes with StatReloader
