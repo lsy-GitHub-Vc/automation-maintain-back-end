@@ -11,6 +11,7 @@ from io import StringIO
 from automatization.settings import logger
 from threading import Thread
 from django.core.paginator import PageNotAnInteger,Paginator,EmptyPage
+from .key_decode import AESEBC
 import numpy as np
 import copy
 import paramiko
@@ -18,6 +19,8 @@ import socket
 import json
 import os
 import xlrd
+import xlwt
+import openpyxl
 
 # 定义一个的线程
 def Tr_async(fun):
@@ -27,7 +30,7 @@ def Tr_async(fun):
     return wrapper
 
 
-
+#插入主机信息
 def Ins_HostInfo(request):
     try:
         logger.info('<---调用主机添加接口--->')
@@ -57,8 +60,8 @@ def Ins_HostInfo(request):
         data = {'code':1,'msg':'主机信息添加成功','data':'success'}
         return HttpResponse(json.dumps(data),content_type='application/json')
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
 
 #批量插入
@@ -69,7 +72,11 @@ def Bulk_Create_HostInfo(request):
         logger.info('<---接收的参数:{0}--->'.format(body))
 
         filepath = body.get('filepath','')
-        sheet_host_list = Execl(filepath)
+        short_name, extension = os.path.splitext(filepath)
+        if extension == '.xlsx':
+            sheet_host_list = XLSX_Read_Excel(filepath)
+        else:
+            sheet_host_list = XLS_Read_Excel(filepath)
         #存储插入主机表的存储
         bulk_create_host_list = []
         #存储插入主机用户表的存储
@@ -79,20 +86,29 @@ def Bulk_Create_HostInfo(request):
         clint_host_dict = {}
         for sheet_value_list in sheet_host_list:
             #存ip和端口
-            clint_host_dict["hostip"] = sheet_value_list[2]
-            clint_host_dict["port"] = sheet_value_list[3]
-            clint_host_dict["credential"] = sheet_value_list[4]
+            clint_host_dict["hostip"] = sheet_value_list["hostip"]
+            clint_host_dict["port"] = sheet_value_list["port"]
+            clint_host_dict["credential"] = sheet_value_list["credential"]
             #插入主机对象
-            bulk_create_host_value = HostInfoManage(hostname=sheet_value_list[0],hostgroup=str(sheet_value_list[1]),hostip=sheet_value_list[2],
-                                                    port=sheet_value_list[3],credential=str(sheet_value_list[4]),description=sheet_value_list[11])
+            bulk_create_host_value = HostInfoManage(hostname=sheet_value_list["hostname"],hostgroup=str(sheet_value_list["hostgroup"]),hostip=sheet_value_list["hostip"],
+                                                    port=sheet_value_list["port"],credential=str(sheet_value_list["credential"]),description=sheet_value_list["description"])
             bulk_create_host_list.append(bulk_create_host_value)
 
             #插入主机用户对象
-            bulk_create_user_value = UserManage(name=str(sheet_value_list[4]),username=sheet_value_list[5],password=sheet_value_list[6],become_method=sheet_value_list[7],
-                                                become_user=sheet_value_list[8],become_password=sheet_value_list[9],public_key=sheet_value_list[10])
+            #密码加密
+            aes_password = sheet_value_list["password"]
+            aes_become_password = sheet_value_list["become_password"]
+            if aes_password:
+                aes_password = AESEBC().Encrypt(aes_password)
+
+            if aes_become_password:
+                aes_become_password = AESEBC().Encrypt(aes_become_password)
+
+            bulk_create_user_value = UserManage(name=str(sheet_value_list["credential"]),username=sheet_value_list["username"],password=aes_password,become_method=sheet_value_list["become_method"],
+                                                become_user=sheet_value_list["become_user"],become_password=aes_become_password,public_key=sheet_value_list["public_key"])
             bulk_create_user_list.append(bulk_create_user_value)
 
-            clint_host_list.append(clint_host_dict)
+            clint_host_list.append(copy.deepcopy(clint_host_dict))
         #批量插入主机管理
         logger.info('<---插入主机管理表 笔数:{0}--->'.format(len(bulk_create_host_list)))
         HostInfoManage.objects.bulk_create(bulk_create_host_list)
@@ -106,13 +122,41 @@ def Bulk_Create_HostInfo(request):
         data = {'code':1,'msg':'批量数据插入完成','data':'success'}
         return HttpResponse(json.dumps(data),content_type='application/json')
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
 
-def Execl(filepath):
+def Generate_DB_Excel(request):
     try:
-        logger.info('<---调用读取execl文件接口>')
+        logger.info('<---调用文件生成接口--->')
+        body = json.loads(request.body.decode())
+        logger.info('<---接收的参数:{0}--->'.format(body))
+        filepath = body.get('file_path','')
+
+        if filepath:
+            short_name, extension = os.path.splitext(filepath)
+            if extension == '.xlsx':
+                result_data = XLSX_Write_Excel(filepath)
+            else:
+                result_data = XLS_Write_Excel(filepath)
+
+            logger.info("<---文件写入结束--->")
+            return HttpResponse(json.dumps(result_data),content_type='application/json')
+        else:
+            logger.info("<---文件路径不能为空--->")
+            data = {'code':2,'msg':"<---文件路径不能为空--->",'data':'Failure'}
+            return HttpResponse(json.dumps(data),content_type='application/json')
+
+    except Exception as e:
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+#读取xls后缀的excel文件
+def XLS_Read_Excel(filepath):
+    try:
+        logger.info('<---调用读取excel.xls的文件接口>')
         #判断文件是否存在
         if os.path.isfile(filepath):
             #打开文件
@@ -128,21 +172,104 @@ def Execl(filepath):
                 sheet_dt = book.sheet_by_name(sheet)
                 #行数
                 rows = sheet_dt.nrows-1
-                cols = sheet_dt.ncols
-                im_data = np.zeros((rows,cols))
+                # cols = sheet_dt.ncols
+                # im_data = np.zeros((rows,cols))
                 logger.info('<---页名:{0} 数据行数:{1}--->'.format(sheet,rows))
                 if rows > 0:
+                    #获取第一行的key
+                    sheet_host_key = sheet_dt.row_values(0)
                     #从第二行开始读 跳过说明行
                     for i in range(rows):
                         sheet_host_data = sheet_dt.row_values(i+1)
-                        sheet_host_list.append([a if isinstance(a,float)==False else int(a) for a in sheet_host_data ])
-                    # for curr_row in range(1,rows):
-                    #     for curr_col in range(cols):
-                    #         raw_value = sheet_dt.cell(curr_row,curr_col).value
-                    #     if isinstance(raw_value,)
+                        #形成字典对应关系  将float类型转换成int(xsls会把int 默认为float)
+                        sheet_host_list.append(dict(zip(sheet_host_key,[a if isinstance(a,float)==False else int(a) for a in sheet_host_data ])))
                     return sheet_host_list
                 else:
                     logger.info('路径文件:{} 无数据'.format(filepath))
+                    data = {'code':2,'msg':'路径文件:{0} 表:{1} 无数据'.format(filepath,sheet),'data':'Failure'}
+                    return HttpResponse(json.dumps(data),content_type='application/json')
+        else:
+            logger.info('路径文件:{} 没有找到文件'.format(filepath))
+            data = {'code':2,'msg':'路径文件:{} 没有找到文件'.format(filepath),'data':'Failure'}
+            return HttpResponse(json.dumps(data),content_type='application/json')
+    except Exception as e:
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+#写入xls后缀的excel文件
+def XLS_Write_Excel(filepath):
+    try:
+        logger.info('<---调用写入excel.xls的文件接口>')
+        result = HostInfoManage.objects.all()
+        if result:
+            #创建一个excel对象
+            book=xlwt.Workbook(encoding="utf-8",style_compression=0)
+            # 创建一个sheet对象
+            sheet = book.add_sheet('主机信息表', cell_overwrite_ok=True)
+            #第一行的数据(列名)
+            listing = ['hostname','hostgroup','hostip','port','credential','description','hoststatus']
+
+            for i in range(0,len(listing)):
+                sheet.write(0,i,listing[i])
+            logger.info("<---列名写入完成: 列名 {0}-->".format(listing))
+            logger.info("<---准备写入数据-->")
+            for j in range(0,len(result)):
+                result_data_list = [result[j].hostname,result[j].hostgroup,result[j].hostip,result[j].port,result[j].credential,result[j].description,result[j].hoststatus]
+                for jr in range(0,len(result_data_list)):
+                    sheet.write(j+1,jr,result_data_list[jr])
+            logger.info("<---数据写入完成-->")
+            book.save(filepath)
+            logger.info("<---文件写入完成--->")
+            data = {'code':1,'msg':"<---主机信息的excel文件生成完成--->",'data':'success'}
+            return data
+        else:
+            logger.info("<---数据库表中无数据--->")
+            data = {'code':2,'msg':"<---数据库表中无数据--->",'data':'Failure'}
+            return data
+
+    except Exception as e:
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return data
+
+
+#读xlsx的excel文件
+def XLSX_Read_Excel(filepath):
+    try:
+        logger.info('<---调用读取excel.xlsx的文件接口>')
+        #判断文件是否存在
+        if os.path.isfile(filepath):
+            #打开文件
+            logger.info('<---打开文件--->')
+            workbook = openpyxl.load_workbook(filepath)
+            sheet_host_key = []
+            sheet_host_list = []
+            #获取页列表
+            page_sheet = workbook.sheetnames
+            logger.info('<---获取所有页列表:{0}--->'.format(page_sheet))
+            #所有页
+            for sheet in page_sheet:
+                #读取某一页
+                sheet_dt = workbook[sheet]
+                #行数
+                rows = sheet_dt.max_row-1
+                logger.info('<---页名:{0} 数据行数:{1}--->'.format(sheet,rows))
+                if rows > 0:
+                    #读文件
+                    j = 0
+                    for row_data in sheet_dt.rows:
+                        if j == 0:
+                            #第一行的key
+                            sheet_host_key = [vs.value for vs in row_data]
+                            j=1
+                        else:
+                            #形成字典对应关系  将float类型转换成int(xsls会把int 默认为float)
+                            sheet_host_list.append(dict(zip(sheet_host_key,[a if isinstance(a,float)==False else int(a) for a in [vs.value for vs in row_data]])))
+                    return sheet_host_list
+                else:
+                    logger.info('路径文件:{0} 表:{1} 无数据'.format(filepath,sheet))
                     data = {'code':2,'msg':'路径文件:{} 无数据'.format(filepath),'data':'Failure'}
                     return HttpResponse(json.dumps(data),content_type='application/json')
         else:
@@ -150,9 +277,45 @@ def Execl(filepath):
             data = {'code':2,'msg':'路径文件:{} 没有找到文件'.format(filepath),'data':'Failure'}
             return HttpResponse(json.dumps(data),content_type='application/json')
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+
+#生成xlsx的excel文件
+def XLSX_Write_Excel(filepath):
+    logger.info('<---生成主机表 excel.xlsx文件接口调用---->')
+    try:
+        result = HostInfoManage.objects.all()
+        if result:
+            workbook = openpyxl.Workbook()
+            worksheet = workbook.active
+            worksheet.title = '主机信息表'
+
+            listing = ['hostname','hostgroup','hostip','port','credential','description','hoststatus']
+            for i in range(0,len(listing)):
+                worksheet.cell(1,i+1,listing[i])
+            logger.info("<---列名写入完成: 列名 {0}-->".format(listing))
+            logger.info("<---准备写入数据-->")
+            for j in range(0,len(result)):
+                result_data_list = [result[j].hostname,result[j].hostgroup,result[j].hostip,result[j].port,result[j].credential,result[j].description,result[j].hoststatus]
+                for jr in range(0,len(result_data_list)):
+                    worksheet.cell(j+2,jr+1,result_data_list[jr])
+            logger.info("<---数据写入完成-->")
+            workbook.save(filename=filepath)
+
+            logger.info("<---文件写入完成--->")
+            data = {'code':1,'msg':"<---主机信息的excel文件生成完成--->",'data':'success'}
+            return data
+        else:
+            logger.info("<---数据库表中无数据--->")
+            data = {'code':2,'msg':"<---数据库表中无数据--->",'data':'Failure'}
+            return data
+    except Exception as e:
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return data
 
 
 
@@ -175,12 +338,12 @@ def Clint_Host_Test(sheet_host_list):
                 sheet_host_list_deep.remove(host_info)
                 clint_host_fai.append(host_info)
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
     else:
         logger.info('<---连接失败的数据:{0}--->'.format(clint_host_fai))
         if clint_host_fai:
             for clint_host_fai_upd in clint_host_fai:
-                HostInfoManage.objects.filter(hostip=clint_host_fai_upd['hostip'],port=clint_host_fai_upd['port'])
+                HostInfoManage.objects.filter(credential = clint_host_fai_upd['credential']).update(hoststatus=1)
         logger.info('<---需要ssh连通性测试的数据:{0}--->'.format(sheet_host_list_deep))
         # if sheet_host_list_deep:
         #     Clint_SSH_Test(sheet_host_list_deep)
@@ -198,7 +361,7 @@ def Clint_SSH_Test(sheet_host_list_deep):
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
 
 
 
@@ -215,6 +378,7 @@ def Sel_HostInfo(request):
         pagesize = int(request.GET.get('pagesize',15))
         hostname = request.GET.get('hostname','')
         hostip = request.GET.get('hostip','')
+        credential = request.GET.get('credential','')
         result_list = []
 
         if hostname:
@@ -224,6 +388,14 @@ def Sel_HostInfo(request):
             else:
                 logger.info('<---没有找到主机名hostname:{0} 对应的数据-->'.format(hostname))
                 data = {'code':2,'msg':'没有找到主机名hostname:{0} 对应的数据'.format(hostname),'data':'Failure'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+        elif credential:
+            sel_influence_result = HostInfoManage.objects.filter(credential=credential)
+            if sel_influence_result.exists():
+                result = Data_Pagination(page,pagesize,sel_influence_result)
+            else:
+                logger.info('<---没有找到访问凭证credential:{0} 对应的数据--->'.format(credential))
+                data = {'code':2,'msg':'没有找到访问凭证credential:{0} 对应的数据'.format(credential),'data':'Failure'}
                 return HttpResponse(json.dumps(data),content_type='application/json')
         elif hostip:
             sel_influence_result = HostInfoManage.objects.filter(hostip=hostip)
@@ -250,11 +422,11 @@ def Sel_HostInfo(request):
             data = {'code':1,'msg':'数据查询完成','total':result[1],'data':result_list}
         else:
             data = {'code':2,'msg':'已达最大页数','data':result[0]}
-        logger.info('<---数据查询完成 返回参数:{0}--->'.format(data))
+        logger.info('<---数据查询完成 返回通知:{0}--->'.format(data))
         return HttpResponse(json.dumps(data),content_type='application/json')
     except Exception as e :
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
 
 
@@ -287,19 +459,19 @@ def Del_HostInfo(request):
             del_influence_num = HostInfoManage.objects.filter(id__in=id_list)
             if del_influence_num.exists():
                 del_influence_num.delete()
-                logger.info('<---id下主机数据删除完成--->')
-                data = {'code':1,'msg':'id下主机数据删除完成','data':'success'}
+                logger.info('<---主机数据删除完成--->')
+                data = {'code':1,'msg':'主机数据删除完成','data':'success'}
                 return HttpResponse(json.dumps(data),content_type='application/json')
             else:
-                data = {'code':2,'msg':'列表为空 无id参数','data':'Failure'}
+                data = {'code':2,'msg':'没有找到列表中的数据','data':'Failure'}
                 return HttpResponse(json.dumps(data),content_type='application/json')
         else:
-            data = {'code':2,'msg':'对比主机id不能为空','data':'Failure'}
+            data = {'code':2,'msg':'主机id不能为空','data':'Failure'}
             return HttpResponse(json.dumps(data),content_type='application/json')
 
     except Exception as e :
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
 
 #修改主机信息
@@ -335,7 +507,159 @@ def Upd_HostInfo(request):
             data = {'code':2,'msg':'对比主机id不能为空','data':'Failure'}
             return HttpResponse(json.dumps(data),content_type='application/json')
     except Exception as e :
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno))
-        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e.__traceback__.tb_lineno),'data':'Failure'}
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+#主机用户添加
+def Ins_UserManage(request):
+    try:
+        logger.info('<---调用主机用户添加接口--->')
+        body = json.loads(request.body.decode())
+        logger.info('<---接收的参数:{0}--->'.format(body))
+
+        name = str(body.get('name',''))
+        username = body.get('username','')
+        password = body.get('password','')
+        if password:
+            password = AESEBC().Encrypt(password)
+        become_method = body.get('become_method','')
+        become_user = body.get('become_user','')
+        become_password = body.get('become_password','')
+        if become_password:
+            become_password = AESEBC().Encrypt(become_password)
+        public_key = body.get('public_key','')
+
+
+
+        usermanage = UserManage()
+        usermanage.name = name
+        usermanage.username = username
+        usermanage.password = password
+        usermanage.become_method = become_method
+        usermanage.become_user = become_user
+        usermanage.become_password = become_password
+        usermanage.public_key = public_key
+        usermanage.save()
+
+        logger.info('<---主机用户信息添加成功--->'.format(body))
+        data = {'code':1,'msg':'主机用户信息添加成功','data':'success'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+    except Exception as e:
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+
+#删除主机用户信息
+def Del_UserManage(request):
+    try:
+        logger.info('<---调用删除主机用户信息接口---->')
+        body = json.loads(request.body.decode())
+        logger.info('<---接收的参数:{}---->'.format(body))
+        id_list = body.get('id_list',[])
+        if id_list:
+            del_influence_num = UserManage.objects.filter(id__in=id_list)
+            if del_influence_num.exists():
+                del_influence_num.delete()
+                logger.info('<---主机用户数据删除完成--->')
+                data = {'code':1,'msg':'主机用户数据删除完成','data':'success'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+            else:
+                data = {'code':2,'msg':'没有找到列表中的数据','data':'Failure'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+        else:
+            data = {'code':2,'msg':'主机用户id列表不能为空','data':'Failure'}
+            return HttpResponse(json.dumps(data),content_type='application/json')
+
+    except Exception as e :
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+
+#修改主机信息
+def Upd_UserManage(request):
+    logger.info('<---修改主机用户信息接口调用---->')
+    body = json.loads(request.body.decode())
+    try:
+        logger.info('<---接收的参数:{}---->'.format(body))
+        id = body.get('id','')
+        name = str(body.get('name',''))
+        username = body.get('username','')
+        password = body.get('password','')
+        become_method = body.get('become_method','')
+        become_user = body.get('become_user','')
+        become_password = body.get('become_password','')
+        public_key = body.get('public_key','')
+
+        if id != '':
+            sel_influence_num = UserManage.objects.filter(id=int(id))
+            if sel_influence_num.exists():
+                upd_influence_num = sel_influence_num.update(name=name,username=username,password=password,become_method=become_method,
+                                                             become_user=become_user,become_password=become_password,public_key=public_key)
+                if upd_influence_num == 1:
+                    logger.info('<---id:{0}的数据更新成功--->'.format(id))
+                    data = {'code':1,'msg':'id:{0}的数据更新成功'.format(id),'data':'success'}
+                    return HttpResponse(json.dumps(data),content_type='application/json')
+                else:
+                    data = {'code':2,'msg':'id:{0}的数据库更新失败'.format(id),'data':'Failure'}
+                    return HttpResponse(json.dumps(data),content_type='application/json')
+            else:
+                data = {'code':2,'msg':'没有找到id:{0}的数据'.format(id),'data':'Failure'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+        else:
+            data = {'code':2,'msg':'主机用户id不能为空','data':'Failure'}
+            return HttpResponse(json.dumps(data),content_type='application/json')
+    except Exception as e :
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
+        return HttpResponse(json.dumps(data),content_type='application/json')
+
+
+
+#查询主机用户信息
+def Sel_UserManage(request):
+    try:
+        logger.info('<---调用查询主机用户信息接口  获取参数:{0}>'.format(request.GET))
+        #获取页码
+        page = request.GET.get('page',1)
+        pagesize = int(request.GET.get('pagesize',15))
+        name = str(request.GET.get('name',''))
+        result_list = []
+
+        if name:
+            sel_influence_result = UserManage.objects.filter(name=name)
+            if sel_influence_result.exists():
+                result = Data_Pagination(page,pagesize,sel_influence_result)
+            else:
+                logger.info('<---没有找到凭证名称name:{0} 对应的数据-->'.format(name))
+                data = {'code':2,'msg':'没有找到凭证名称name:{0} 对应的数据'.format(name),'data':'Failure'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+        else:
+            sel_influence_result = UserManage.objects.all()
+            if sel_influence_result.exists():
+                result = Data_Pagination(page,pagesize,sel_influence_result)
+            else:
+                logger.info('<---没有找到数据信息--->')
+                data = {'code':2,'msg':'没有找到数据信息','data':'Failure'}
+                return HttpResponse(json.dumps(data),content_type='application/json')
+
+        # logger.info('<---返回的分页数据:{}--->'.format(result))
+        if result[0]:
+            for result_sing in result[0]:
+                result_list.append({'id':result_sing.id,'name':result_sing.name,'username':result_sing.username,'password':result_sing.password,'become_method':result_sing.become_method,
+                                    'become_user':result_sing.become_user,'become_password':result_sing.become_password,'public_key':result_sing.public_key})
+            data = {'code':1,'msg':'数据查询完成','total':result[1],'data':result_list}
+        else:
+            data = {'code':2,'msg':'已达最大页数','data':result[0]}
+        logger.info('<---数据查询完成 返回通知:{0}--->'.format(data))
+        return HttpResponse(json.dumps(data),content_type='application/json')
+    except Exception as e :
+        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
+        data = {'code':2,'msg':"<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno),'data':'Failure'}
         return HttpResponse(json.dumps(data),content_type='application/json')
 

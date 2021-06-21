@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
-from automatization.hostgroup.views import Ins_HostInfo,Bulk_Create_HostInfo,Sel_HostInfo,Del_HostInfo,Upd_HostInfo
+from automatization.hostgroup.views import Ins_HostInfo,Bulk_Create_HostInfo,Sel_HostInfo,Del_HostInfo,Upd_HostInfo,Ins_UserManage,Del_UserManage,Upd_UserManage,\
+    Sel_UserManage,Generate_DB_Excel
 
 urlpatterns = [
 
@@ -26,5 +27,11 @@ urlpatterns = [
     path('sel_hostinfo',Sel_HostInfo),#主机信息查询
     path('upd_hostinfo',Upd_HostInfo),#主机信息修改
     path('del_hostinfo',Del_HostInfo),#主机信息删除
+    path('ins_usermanage',Ins_UserManage),#主机用户信息添加
+    path('del_usermanage',Del_UserManage),#主机用户信息删除
+    path('upd_usermanage',Upd_UserManage),#主机用户信息修改
+    path('sel_usermanage',Sel_UserManage),#主机用户信息查询
+    path('generate_db_excel',Generate_DB_Excel),#生成主机表的excel文件
+
 
 ]
