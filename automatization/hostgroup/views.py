@@ -9,10 +9,9 @@ from .models import HostInfoManage,UserManage
 from django.http import HttpResponse
 from io import StringIO
 from automatization.settings import logger
-from threading import Thread
+from .thead_and_result import Tread_pool
 from django.core.paginator import PageNotAnInteger,Paginator,EmptyPage
 from .key_decode import AESEBC
-import numpy as np
 import copy
 import paramiko
 import socket
@@ -21,13 +20,6 @@ import os
 import xlrd
 import xlwt
 import openpyxl
-
-# 定义一个的线程
-def Tr_async(fun):
-    def wrapper(*args,**kwargs):
-        thr = Thread(target=fun,args=args,kwargs=kwargs)
-        thr.start()
-    return wrapper
 
 
 #插入主机信息
@@ -76,7 +68,7 @@ def  Single_Connect_Check(request):
         credential = body.get('credential','')
         if hostip and credential and port:
             #调用连通性接口
-            Clint_Host_Test([{'hostip':hostip,'port':port,'credential':credential}])
+            Tread_pool(Clint_Host_Test,[{'hostip':hostip,'port':port,'credential':credential}])
 
             logger.info('<---连通性校验启动完成 请查看数据库状态码--->')
             data = {'code':1,'msg':'连通性校验启动完成 请查看数据库状态码','data':'success'}
@@ -85,8 +77,6 @@ def  Single_Connect_Check(request):
             logger.info('<---主机ip 端口 访问凭证存在空值 ip:{0} port:{1} 凭证:{2}--->'.format(hostip,port,credential))
             data = {'code':1,'msg':'主机信息添加成功','data':'success'}
             return HttpResponse(json.dumps(data),content_type='application/json')
-
-
 
     except Exception as e:
         logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
@@ -144,7 +134,8 @@ def Bulk_Create_HostInfo(request):
         UserManage.objects.bulk_create(bulk_create_user_list)
         #后续进行连通性测试(异步)
         logger.info('<---接入主机连通性测试接口 (异步)--->')
-        Clint_Host_Test(clint_host_list)
+        # Clint_Host_Test(clint_host_list)
+        Tread_pool(Clint_Host_Test,clint_host_list)
 
         data = {'code':1,'msg':'批量数据插入完成','data':'success'}
         return HttpResponse(json.dumps(data),content_type='application/json')
@@ -156,94 +147,94 @@ def Bulk_Create_HostInfo(request):
 
 
 #连通性检测
-@Tr_async
-def Clint_Host_Test(sheet_host_list):
+def Clint_Host_Test(sheet_host_data):
     try:
-        #sheet_host_list [{'hostip':'','port':22},{hostip':'','port':21}...]
-        logger.info('<---目标主机连通性测试 参数:{0}--->'.format(sheet_host_list))
+        logger.info('<---目标主机连通性测试 参数:{0}--->'.format(sheet_host_data))
         #连通性测试
-        clint_host_fai = []
-        sheet_host_list_deep = copy.deepcopy(sheet_host_list)
-        for host_info in sheet_host_list:
-            sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            sk.settimeout(1.5)
-            try:
-                sk.connect((host_info['hostip'],int(host_info['port'])))
-                logger.info('<---目标主机连接成功 ip:{0} 端口:{1}--->'.format(host_info['hostip'],host_info['port']))
-            except Exception as e:
-                sheet_host_list_deep.remove(host_info)
-                clint_host_fai.append(host_info)
+        # clint_host_fai = []
+        # sheet_host_list_deep = copy.deepcopy(sheet_host_list)
+        # for host_info in sheet_host_list:
+        sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        sk.settimeout(1.5)
+        try:
+            sk.connect((sheet_host_data['hostip'],int(sheet_host_data['port'])))
+            logger.info('<---目标主机连接成功 ip:{0} 端口:{1}--->'.format(sheet_host_data['hostip'],sheet_host_data['port']))
+            logger.info('<---需要ssh连通性测试的数据:{0}--->'.format(sheet_host_data))
+            return Clint_SSH_Test(sheet_host_data)
+        except Exception as e:
+            # sheet_host_list_deep.remove(host_info)
+            # clint_host_fai.append(host_info)
+            logger.info('<---连接失败的数据 主机:{0} 凭证id:{1}--->'.format(sheet_host_data['hostip'],sheet_host_data['credential']))
+            return sheet_host_data['credential'],0
     except Exception as e:
-        logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
-    else:
-        logger.info('<---连接失败的数据:{0}--->'.format(clint_host_fai))
-        if clint_host_fai:
-            for clint_host_fai_upd in clint_host_fai:
-                HostInfoManage.objects.filter(credential = clint_host_fai_upd['credential']).update(hoststatus=0)
-        logger.info('<---需要ssh连通性测试的数据:{0}--->'.format(sheet_host_list_deep))
-        if sheet_host_list_deep:
-            Clint_SSH_Test(sheet_host_list_deep)
+        logger.info("<---凭证credential:{0} 异常信息:{1}  发生异常的行数:{2}--->".format(sheet_host_data['credential'],e,e.__traceback__.tb_lineno))
+    # else:
+        # logger.info('<---连接失败的数据:{0}--->'.format(clint_host_fai))
+        # if clint_host_fai:
+        #     for clint_host_fai_upd in clint_host_fai:
+        #         HostInfoManage.objects.filter(credential = clint_host_fai_upd['credential']).update(hoststatus=0)
+        # logger.info('<---需要ssh连通性测试的数据:凭证id->{0} 主机ip->{1}--->'.format(sheet_host_data['credential'],sheet_host_data['hostip']))
+        # if sheet_host_list_deep:
+        #     Clint_SSH_Test(sheet_host_list_deep)
     finally:
         if sk:
             sk.close()
 
 
 #ssh连接测试
-def Clint_SSH_Test(sheet_host_list_deep):
+def Clint_SSH_Test(sheet_host_data):
     logger.info("<---启动校验SSH服务的接口--->")
     try:
         #获取凭证列表
-        pz_list = [a['credential'] for a in sheet_host_list_deep]
+        # pz_list = [a['credential'] for a in sheet_host_list_deep]
         #获取凭证数据列表
-        result = UserManage.objects.filter(name__in=pz_list)
-        splic = []
-        if result:
+        result = UserManage.objects.filter(name=sheet_host_data['credential'])
+        # splic = []
+        if result and result.count() == 1:
             #合并信息(将主机ip和该主机下的用户信息做对应)
-            logger.info("<---合并主机信息和用户信息--->")
-            for res in result:
-                for shl in sheet_host_list_deep:
-                    if str(res.name) == str(shl['credential']):
-                        shl['result_pj']=res
-                        splic.append(shl)
+            # logger.info("<---合并主机信息和用户信息--->")
+            # for res in result:
+            #     for shl in sheet_host_data:
+            #         if str(res.name) == str(shl['credential']):
+            #             shl['result_pj']=res
+            #             splic.append(shl)
 
             #获取连接信息
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             #用于存储ssh连接失败的凭证id
-            fai_ssh_host = []
+            # fai_ssh_host = []
             logger.info("<---准备ssh连接测试--->")
-            for splic_data in splic:
+            for splic_data in result:
                 try:
-                    if splic_data['result_pj'].become_method in ['su','enable']:
+                    if splic_data.become_method in ['su','enable']:
                         #密码解码
                         logger.info("<---su enable  用户密码解码--->")
-                        pwd = AESEBC().Decrypt(splic_data['result_pj'].become_password)
-                        ssh.connect(hostname=splic_data['hostip'], port=22, username=splic_data['result_pj'].become_user, password=pwd)
-                        logger.info("<---主机:{0} ssh连接成功--->".format(splic_data['hostip']))
+                        pwd = AESEBC().Decrypt(splic_data.become_password)
+                        ssh.connect(hostname=sheet_host_data['hostip'], port=22, username=splic_data.become_user, password=pwd)
+                        logger.info("<---主机:{0} ssh连接成功--->".format(sheet_host_data['hostip']))
                     else:
                         #密码解码
                         logger.info("<---用户密码解码--->")
-                        pwd = AESEBC().Decrypt(splic_data['result_pj'].password)
-                        ssh.connect(hostname=splic_data['hostip'], port=22, username=splic_data['result_pj'].username, password=pwd)
-                        logger.info("<---主机:{0} ssh连接成功--->".format(splic_data['hostip']))
+                        pwd = AESEBC().Decrypt(splic_data.password)
+                        ssh.connect(hostname=sheet_host_data['hostip'], port=22, username=splic_data.username, password=pwd)
+                        logger.info("<---主机:{0} ssh连接成功--->".format(sheet_host_data['hostip']))
+                    return sheet_host_data['credential'],2
                 except Exception as ep:
-                    fai_ssh_host.append(splic_data['credential'])
                     logger.info("<---ssh连接异常 异常信息:{0}  发生异常的行数:{1}--->".format(ep,ep.__traceback__.tb_lineno))
-
+                    return sheet_host_data['credential'],1
             #获取成功的凭证id
-            suc_ssh_host = [suc for suc in pz_list if suc not in fai_ssh_host]
-
-            logger.info("<---更新主机表状态 ssh连接失败的凭证id集合:{0}--->".format(fai_ssh_host))
-            if fai_ssh_host:
-                HostInfoManage.objects.filter(credential__in=fai_ssh_host).update(hoststatus=1)
-
-            logger.info("<---更新主机表状态 ssh连接成功的凭证id集合:{0}--->".format(suc_ssh_host))
-            if suc_ssh_host:
-                HostInfoManage.objects.filter(credential__in=suc_ssh_host).update(hoststatus=2)
-
-            logger.info("<---主机ssh连通性测试结束--->")
+            # suc_ssh_host = [suc for suc in pz_list if suc not in fai_ssh_host]
+            #
+            # logger.info("<---更新主机表状态 ssh连接失败的凭证id集合:{0}--->".format(fai_ssh_host))
+            # if fai_ssh_host:
+            #     HostInfoManage.objects.filter(credential__in=fai_ssh_host).update(hoststatus=1)
+            #
+            # logger.info("<---更新主机表状态 ssh连接成功的凭证id集合:{0}--->".format(suc_ssh_host))
+            # if suc_ssh_host:
+            #     HostInfoManage.objects.filter(credential__in=suc_ssh_host).update(hoststatus=2)
         else:
-            logger.info("<---没有获取到凭证的数据--->")
+            logger.info("<---主机:{0} 凭证:{1} 没有获取到该凭证id的数据 或者查出该凭证id的条数大于1--->".format(sheet_host_data['hostip'],sheet_host_data['credential']))
 
     except Exception as e:
         logger.info("<---异常信息:{0}  发生异常的行数:{1}--->".format(e,e.__traceback__.tb_lineno))
